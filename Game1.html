@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Game1</title>
+        <style>
+            canvas{
+                border: 1px solid #000000;
+            }
+            div {
+                width: 400px;
+                margin: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <canvas id="playArea" width="400" height="200"></canvas>
+        </div>
+        <script>
+            var canvas = document.getElementById("playArea");
+            var context = canvas.getContext("2d");
+            var player = {
+                x:Math.floor(Math.random()*380),
+                y:Math.floor(Math.random()*180),
+                vx:0,
+                vy:0,
+                vvx:0.5,
+                vvy:0.5
+            };
+            var food = {
+                x:Math.floor(Math.random()*390),
+                y:Math.floor(Math.random()*190)
+            };
+            var score=0;
+            var gameOver=false
+            context.fillStyle="black";
+            context.font="30px Arial";
+            setInterval(() => {
+                if (!gameOver){
+                    context.clearRect(0, 0, 400, 200);
+                    context.fillRect(player.x, player.y, 20, 20);
+                    context.fillRect(food.x, food.y, 10, 10);
+                    context.fillText(score, 10, 190);
+                    player.x+=player.vx;
+                    player.y+=player.vy;
+                    if (!(((player.y <= 180)&&(0 <= player.y))&&((player.x <= 380)&&(0 <= player.x)))){
+                        gameOver=true;
+                    }
+                    if (((player.x>=food.x-20)&&(player.y>=food.y-20))&&((player.x<=food.x+20)&&(player.y<=food.y+20))){
+                        food.x=Math.floor(Math.random()*390)
+                        food.y=Math.floor(Math.random()*190)
+                        score+=1;
+                        if (score%5==0){
+                            player.vvx+=0.1
+                            player.vvy+=0.1
+                        }
+                    }
+                } else{
+                    context.fillText("Game Over", 100, 100);
+                }
+            }, 1);
+        </script>
+        <div>
+            <div>
+                <button type="button" id="up" onclick="player.vy=-player.vvy, player.vx=0">up</button>
+            </div>
+            <div>
+                <button type="button" id="left" onclick="player.vx=-player.vvx, player.vy=0">left</button>
+                <button type="button" id="right" onclick="player.vx=player.vvx, player.vy=0">right</button>
+            </div>
+            <div>
+                <button type="button" id="down" onclick="player.vy=player.vvy, player.vx=0">down</button>
+            </div>
+            <div>
+                <button type="button" id="Restart" onclick="
+                    player.x=Math.floor(Math.random()*390);
+                    player.y=Math.floor(Math.random()*190);
+                    player.vx=0;
+                    player.vy=0;
+                    player.vvx=0.5;
+                    player.vvy=0.5;
+                    gameOver=false;
+                    score=0;
+                    food.x=Math.floor(Math.random()*390);
+                    food.y=Math.floor(Math.random()*190);
+                    ">Restart</button>
+            </div>
+        </div>
+    </body>
+</html>

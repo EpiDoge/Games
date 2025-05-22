@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Game3</title>
+        <style>
+            canvas{
+                border: 1px solid #000000;
+            }
+            div {
+                width: 400px;
+                margin: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+        <div>
+            <canvas id="playArea" width="400" height="200"></canvas>
+        </div>
+        <script>
+            var canvas=document.getElementById("playArea");
+            var context=canvas.getContext("2d");
+            var player={
+                x:Math.floor(Math.random()*380),
+                y:Math.floor(Math.random()*180),
+                vx:0,
+                vy:0,
+                vvx:0.5,
+                vvy:0.5
+            };
+            var coin={
+                x:Math.floor(Math.random()*380),
+                y:Math.floor(Math.random()*180),
+                worth:1
+            }
+            var worthUpgrade={
+                x:300,
+                y:30,
+                cost:10
+            }
+            var speedUpgrade={
+                x:300,
+                y:80,
+                cost:5
+            }
+            var cash=0;
+            setInterval(() => {
+                    context.clearRect(0, 0, 400, 200);
+                    context.fillStyle="red";
+                    context.fillRect(player.x, player.y, 20, 20);
+                    context.fillStyle="orange";
+                    context.fillRect(coin.x, coin.y, 10, 10);
+                    context.font="30px Arial";
+                    context.fillStyle="black";
+                    context.fillText("$"+cash, 10, 190);
+                    player.x+=player.vx;
+                    player.y+=player.vy;
+                    if (cash >= worthUpgrade.cost) {
+                        context.fillStyle="green"
+                    } else {
+                        context.fillStyle="red"
+                    }
+                    context.fillRect(worthUpgrade.x, worthUpgrade.y, 20, 20);
+                    context.fillStyle="black";
+                    context.font="10px Arial";
+                    context.fillText("Upgrade Coin Worth: $"+worthUpgrade.cost, worthUpgrade.x-50, worthUpgrade.y-10);
+                    if (cash >= speedUpgrade.cost) {
+                        context.fillStyle="green"
+                    } else {
+                        context.fillStyle="red"
+                    }
+                    context.fillRect(speedUpgrade.x, speedUpgrade.y, 20, 20);
+                    context.fillStyle="black";
+                    context.font="10px Arial";
+                    context.fillText("Upgrade Player Speed: $"+speedUpgrade.cost, speedUpgrade.x-50, speedUpgrade.y-10);
+                    if (player.y >= 180){
+                        player.y-=player.vvy;
+                    } else if(0 >= player.y){
+                        player.y+=player.vvy;
+                    }
+                    if (player.x >= 380){
+                        player.x-=player.vvx;
+                    } else if(0 >= player.x){
+                        player.x+=player.vvy;
+                    }
+                    if (((player.x>=coin.x-20)&&(player.y>=coin.y-20))&&((player.x<=coin.x+20)&&(player.y<=coin.y+20))){
+                        coin.x=Math.floor(Math.random()*390);
+                        coin.y=Math.floor(Math.random()*190);
+                        cash+=coin.worth;
+                    }
+                    if (((player.x>=worthUpgrade.x-20)&&(player.y>=worthUpgrade.y-20))&&((player.x<=worthUpgrade.x+20)&&(player.y<=worthUpgrade.y+20))){
+                        if (cash >= worthUpgrade.cost){
+                            cash-=worthUpgrade.cost
+                            worthUpgrade.cost*=2;
+                            coin.worth+=1
+                        }
+                    }
+                    if (((player.x>=speedUpgrade.x-20)&&(player.y>=speedUpgrade.y-20))&&((player.x<=speedUpgrade.x+20)&&(player.y<=speedUpgrade.y+20))){
+                        if (cash >= speedUpgrade.cost){
+                            cash-=speedUpgrade.cost
+                            speedUpgrade.cost*=2;
+                            player.vvx+=0.25;
+                            player.vvy+=0.25;
+                        }
+                    }
+            }, 1);
+        </script>
+            <button type="button" id="up" onmousedown="player.vy=-player.vvy" onmouseup="player.vy=0">up</button>
+        <div>
+            <button type="button" id="left" onmousedown="player.vx=-player.vvx" onmouseup="player.vx=0">left</button>
+            <button type="button" id="right" onmousedown="player.vx=player.vvx" onmouseup="player.vx=0">right</button>
+        </div>
+        <div>
+            <button type="button" id="down" onmousedown="player.vy=player.vvy" onmouseup="player.vy=0">down</button>
+        </div>
+        </div>
+    </body>
+</html>

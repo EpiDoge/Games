@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Game2</title>
+        <style>
+            div{
+                margin:auto;
+                width: 400px;
+            }
+            canvas{
+                border: 1px solid black;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <canvas width="400" height="200" id="playArea"></canvas>
+        </div>
+        <script>
+            var canvas=document.getElementById("playArea");
+            var context=canvas.getContext("2d");
+            var player={
+                x:10,
+                y:100,
+                vy:0
+            }
+            var pipe={
+                x:400,
+                y:Math.floor(Math.random()*180)-80,
+                vx:-1
+            }
+            var gameOver=false;
+            var score=0;
+            context.fillStyle="black";
+            context.font="30px Arial";
+            setInterval(() => {
+                if (!gameOver){
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+                    context.fillRect(player.x, player.y, 20, 20);
+                    context.fillRect(pipe.x, 0, 20, pipe.y);
+                    context.fillRect(pipe.x, pipe.y+80, 20, 200-pipe.y);
+                    context.fillText(score, 10, 190)
+                    player.y-=player.vy;
+                    player.vy-=0.01;
+                    pipe.x+=pipe.vx;
+                    if ((pipe.x<=-20)){
+                        pipe.x=380;
+                        pipe.y=Math.floor(Math.random()*180)-80
+                        score+=1
+                        if (score%5==0){
+                            pipe.vx-=0.1
+                        }
+                    }
+                    if (((pipe.x-20 <= player.x)&&(pipe.x >= player.x))&&((pipe.y>=player.y)||(pipe.y+80<=player.y))) {
+                        gameOver=true;
+                    }
+                    if (!((player.y <= 180))){
+                        gameOver=true;
+                    }
+                } else {
+                    context.fillText("Game Over", 100, 100);
+                }
+            }, 1);
+        </script>
+        <div>
+            <button type="button" id="flap" onclick="player.vy=1">flap</button>
+            <button type="button" id="restart" onclick="player.vy=0; player.y=100; pipe.x=400; pipe.y=Math.floor(Math.random()*180)-80; pipe.vx=-1; gameOver=false; score=0">Restart</button>
+        </div>
+    </body>
+</html>

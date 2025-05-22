@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Game4</title>
+        <style>
+            canvas{
+                border:1px solid black;
+            }
+            div{
+                width:400px;
+                margin: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas width="400" height="200" id="playArea"></canvas>
+        <script>
+            var canvas=document.getElementById("playArea");
+            var context=canvas.getContext("2d");
+            var player={
+                x:50,
+                y:100,
+                vy:0
+            }
+            var obstacle={
+                x:400,
+                height:Math.floor(Math.random()*20),
+                vx:1
+            }
+            var score=0;
+            var gameOver=false;
+            canvas.addEventListener("mousedown", function(e) {
+                if (gameOver){
+                    gameOver=false;
+                    player.y=100;
+                    player.vy=0;
+                    obstacle.x=400;
+                    obstacle.height=Math.floor(Math.random()*20);
+                    obstacle.vx=1;
+                    score=0;
+                } else {
+                    if (player.y >= 105){
+                        player.vy=1
+                    }
+                }
+            })
+            context.font="30px Arial";
+            context.fillStyle="black";
+            setInterval(() => {
+                if (!gameOver){
+                    context.clearRect(0, 0, 400, 200);
+                    context.fillRect(player.x, player.y, 20, 20);
+                    context.fillRect(obstacle.x, obstacle.height+80, 20, 130-(obstacle.height+80));
+                    context.fillText(score, 10, 40);
+                    if (obstacle.x <= -20) {
+                        obstacle.x=400;
+                        obstacle.height=Math.floor(Math.random()*20);
+                        score+=1;
+                        if (score%10==0){
+                            obstacle.vx+=0.25;
+                        }
+                    }
+                    if (((player.x >= obstacle.x-20)&&(player.x <= obstacle.x))&&(player.y >= obstacle.height+60)){
+                        gameOver=true;
+                    }
+                    player.y-=player.vy
+                    player.vy-=0.007
+                    obstacle.x-=obstacle.vx
+                    if (player.y >= 110){
+                        player.vy=0
+                    }
+                    context.moveTo(0, 130);
+                    context.lineTo(400, 130);
+                    context.stroke();
+                } else {
+                    context.fillText("Game Over", 100, 100)
+                }
+            }, 1);
+        </script>
+    </body>
+</html>
