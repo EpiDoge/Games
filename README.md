@@ -1,1 +1,3 @@
--This is just a place where I put my games here
+-This is just a place where I put my simple games here
+-I will add more in the future
+-Enjoy playing them i guess
